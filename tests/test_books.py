@@ -51,6 +51,7 @@ def test_delete_book():
     response = client.get("/books/3")
     assert response.status_code == 404
 
+
 def test_invalid_book():
     response = client.get("/api/v1/books/999")
     assert response.status_code == 404
