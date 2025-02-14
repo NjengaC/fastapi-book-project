@@ -11,6 +11,6 @@ class Settings(BaseSettings):
     SECRET_KEY: str = secrets.token_urlsafe(32)
     DEBUG: bool = False
     TESTING: bool = False
-    ENABLE_STAGE2: bool = True
+    ENABLE_STAGE2: bool = False
 
 settings = Settings()
