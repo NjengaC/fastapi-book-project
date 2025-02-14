@@ -10,14 +10,15 @@ on:
 
 jobs:
   test:
-    if: github.event_name == 'pull_request'
-    name: Run Tests
+    name: Run Tests and Linting
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
@@ -25,34 +26,45 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install flake8 black pytest
+
+      - name: Run Lint (flake8)
+        run: flake8 .
+
+      - name: Check Code Formatting (black)
+        run: black --check .
+
+      - name: Run Syntax Check on main.py
+        run: python -m py_compile main.py
 
       - name: Run Tests
-        run: pytest
+        run: pytest --maxfail=1 --disable-warnings -q
 
   deploy:
-    if: github.event_name == 'push'
     name: Deploy Application
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     needs: test
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
       - name: Log in to DockerHub
-        # Optional: if you push images to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker Image
-        run: DOCKER_BUILDKIT=1 docker build -t fastapi-app .
+        run: DOCKER_BUILDKIT=1 docker build --no-cache -t fastapi-app .
 
       - name: Deploy Application
         run: |
           echo "Deploying application..."
-          # Add your deployment command here.
-          # This could be pushing the image to a registry,
-          # updating a server, etc.
+          # Ensure deploy.sh is executable and performs the necessary steps 
+          # (e.g., pushing the new image, updating your container, etc.)
+          chmod +x deploy.sh
+          ./deploy.sh
