@@ -17,5 +17,7 @@ app.add_middleware(
 app.include_router(api_router, prefix=settings.API_PREFIX)
 
 
+@app.get("/healthcheck")
+async def health_check():
     """Checks if server is active."""
     return {"status": "active"}
