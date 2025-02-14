@@ -31,4 +31,3 @@ typing_extensions
 urllib3
 uvicorn
 wrapt
-frake8
