@@ -13,4 +13,5 @@ class Settings(BaseSettings):
     TESTING: bool = False
     ENABLE_STAGE2: bool = False
 
+
 settings = Settings()
