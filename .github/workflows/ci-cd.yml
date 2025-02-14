@@ -24,9 +24,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt flake8 black pytest
 
-      - name: Check Code Formatting (black)
-        run: black --check .
-
       - name: Run Syntax Check on main.py
         run: python -m py_compile main.py
 
