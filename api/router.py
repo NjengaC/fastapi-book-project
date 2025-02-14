@@ -3,8 +3,7 @@ from fastapi import APIRouter
 from api.routes import books
 
 api_router = APIRouter()
-api_router.include_router(books.router, prefix="/books", tags=["books"])
-
+api_router.include_router(books.router, prefix="/api/v1/books", tags=["books"])
 # Only include /stage2 if ENABLE_STAGE2 is True.
 from core.config import settings
 if settings.ENABLE_STAGE2 == True:
